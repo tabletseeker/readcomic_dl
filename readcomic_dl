@@ -200,7 +200,7 @@
 
 								sleep 1
 
-								gm convert "$workdir""$name""${input[1]}"_files/*.jpg "$outputdir""$name""${input[1]}".pdf && \
+								img2pdf "$workdir""$name""${input[1]}"_files/*.jpg --output "$outputdir""$name""${input[1]}".pdf && \
 
 								rm -rf "$workdir""$name""${input[1]}"_files "$workdir""$name""${input[1]}"
 								
