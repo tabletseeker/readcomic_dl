@@ -128,7 +128,7 @@
 		Press \Zb\Zr Arrow UP ↑ \Zn or \Zb\Zr Arrow DOWN ↓ \Zn for slow scrolling.\n\n"
 
 		error_string="You have not selected any valid option. Please try again!"
-		error_check='^[0-9]+$'
+		error_check='^[1-9]+$'
 		start='echo 0'
 		limit='echo 0'
 		num='echo ${index[check-1]}'
