@@ -160,7 +160,7 @@ sleep 1 # Give 'Save as' dialog box time to show up
 if [[ "${browser}" == "firefox" ]]; then
     savefile_dialog_title="Save as"
 else
-    savefile_dialog_title="Save file"
+    savefile_dialog_title="All Files"
 fi
 # Find window id for the "Save file" dialog box
 savefile_wid="$(xdotool search --name "$savefile_dialog_title" | head -n 1)"
