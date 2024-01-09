@@ -227,10 +227,8 @@ printf "INFO: Processing $comic ...\n" >&2
 # Wait for the file to be completely saved
 sleep ${save_wait_time}
 
-# Close the browser tab/window (Ctrl+w for KDE, Ctrl+F4 otherwise)
-if [[ "${is_kde}" -eq 1 ]]; then
-    xdotool windowactivate "${browser_wid}" key --clearmodifiers "ctrl+w"
-else
-    xdotool windowactivate "${browser_wid}" key --clearmodifiers "ctrl+F4"
-fi
+# Close the browser tab/window (Ctrl+w for most DE, but Ctrl+F4 may be necessary for older linux versions
+
+xdotool windowactivate "${browser_wid}" key --clearmodifiers "ctrl+w"
+
 printf "INFO: Done!\n">&2
