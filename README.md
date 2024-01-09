@@ -1,5 +1,5 @@
 # readcomic_dl
-A collection of scripts to automatically download comics from readcomiconline.li and convert them to .pdf format. Due to conventional methods such as `wget` no longer working properly, this project uses automated browser downloads instead. 
+A collection of scripts to automatically download comics from readcomiconline.li and convert them to .pdf format. Due to conventional methods no longer working properly, this project uses automated browser downloads to do the job. 
 
 # Dependencies
 * required: `wget` `xdotool` `img2pdf` `bc` `dialog` `firefox`
