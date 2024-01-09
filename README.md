@@ -78,11 +78,11 @@ in order to switch to Chrome (which needs to be installed):
 
 before:
 ```
-"$autosave" -b firefox
+browser="firefox"
 ```
 after:
 ```
-"$autosave" -b google-chrome
+browser="google-chrome"
 ```
 ## Dialog
 * .dialogrc contains custom style settings which should make your dialog
