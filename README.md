@@ -42,7 +42,7 @@ outputdir="$HOME/"
 time needed to load all the images on a page and download them.
 * depending on your internet speed you can choose the amount of seconds you would
 like the script to wait for a page to load (load_time) and be downloaded (save_time).
-* the script only downloads hiqh quality variants, so make sure you adjust accordingly.
+* the script only downloads high quality variants, so make sure you adjust accordingly.
 ```
 load_time=6
 save_time=4
