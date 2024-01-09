@@ -1,4 +1,4 @@
-# readcomic_dl
+<img src="https://i.ibb.co/QDfhn7W/joker-banner.png" style="width: max(45%, 400px); margin: .5rem;">
 A simple shell script to download comics from readcomiconline.li via automated browser input, which seems to be the only
 working solution in 2024.
 
