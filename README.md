@@ -44,7 +44,7 @@ time needed to load all the images on a page and download them.
 like the script to wait for a page to load (load_time) and be downloaded (save_time).
 * the script only downloads high quality variants, so make sure you adjust accordingly.
 ```
-load_time=6
+load_time=4
 save_time=4
 ```
 
