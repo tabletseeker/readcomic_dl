@@ -3,12 +3,12 @@ A simple shell script to download comics from readcomiconline.li via automated b
 working solution in 2024.
 
 # Dependencies
-* required: `wget` `xdotool` `img2pdf` `bc` `dialog` `firefox`
+* required: `wget` `xdotool` `img2pdf` `bc` `dialog` `firefox-esr`
 * optional: `gnome-terminal` `google-chrome`
 ```
-debian: sudo apt-get install -y wget xdotool graphicsmagick bc dialog
-fedora: sudo dnf install wget xdotool graphicsmagick bc dialog
-arch: pacman -S wget xdotool graphicsmagick bc dialog
+debian: sudo apt-get install -y wget xdotool img2pdf bc dialog firefox-esr
+fedora: sudo dnf install wget xdotool img2pdf bc dialog firefox-esr
+arch: pacman -S wget xdotool img2pdf bc dialog firefox-esr
 ```
 # Usage
 
