@@ -201,7 +201,7 @@
 
 								sleep 1
 
-								img2pdf "$workdir""$name""${input[1]}"_files/*.jpg --output "$outputdir""$name""${input[1]}".pdf && \
+								img2pdf "$workdir""$name""${input[1]}"_files/*.j*g --output "$outputdir""$name""${input[1]}".pdf && \
 
 								rm -rf "$workdir""$name""${input[1]}"_files "$workdir""$name""${input[1]}"
 								
