@@ -93,3 +93,5 @@ and create a standard one like so:
 ```
 dialog --create-rc ~/.dialogrc
 ```
+## Thanks
+If you like this project please share it and leave a ⭐
