@@ -93,5 +93,7 @@ and create a standard one like so:
 ```
 dialog --create-rc ~/.dialogrc
 ```
-## Thanks
-If you like this project please share it and leave a ⭐
+## Donations :heartpulse:
+If you like my contributions please feel free to drop a coin.
+- Bitcoin URL: bitcoin:bc1qjz2dqu4u5uhxcv43jqmlefgffe3hnfavcs8w90
+- Bitcoin Address: bc1qjz2dqu4u5uhxcv43jqmlefgffe3hnfavcs8w90
