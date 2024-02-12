@@ -1,8 +1,8 @@
 #!/bin/bash
 	
-	autosave="$HOME/readcomic_dl/autosave"
+	autosave="$PWD/readcomic_dl/autosave"
 	workdir="$HOME/Downloads/"
-	dialogrc="$HOME/readcomic_dl/.dialogrc"
+	dialogrc="$PWD/readcomic_dl/.dialogrc"
 	outputdir="$HOME/"
 	url_regex='https://readcomiconline.li/Comic/(.*?)'
 	load_time=4
@@ -196,7 +196,7 @@
 								
 								name=$(eval $scheme)
 								
-								"$autosave" -b "$browser" -d "$workdir""$name""${input[1]}" -c "$full_comic$name${input[1]}" \
+								bash "$autosave" -b "$browser" -d "$workdir""$name""${input[1]}" -c "$full_comic$name${input[1]}" \
 								--load-wait-time "$load_time" --save-wait-time "$save_time" "https://readcomiconline.li${array[$(eval $num)]}&s=&quality=hq&s=&readType=1"
 
 								sleep 1
