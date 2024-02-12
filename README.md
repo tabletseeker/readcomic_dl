@@ -20,17 +20,15 @@ git clone https://github.com/tabletseeker/readcomic_dl -b main
 ```
 bash readcomic_dl/readcomic_dl
 ```
-* make sure to adjust load_time and save_time to your liking as explained below, but also keep in mind that captchas are triggered if pages are loaded too quickly in series. The sweet spot is around 3-4 seconds for each.
+* make sure to adjust load_time and save_time to your liking as explained below, but also keep in mind that captchas are triggered if pages are loaded too quickly in series. The sweet spot is around 5-6 seconds for each.
 * dialog already contains instructions for each window but you may also press the "Help" button, which can be toggled via TAB, for further information.
 # Setup
 * All prescribed changes are to be made in the readcomic_dl script file.
 
 ## File Locations
-* this script uses the following default locations which can be
+* this script uses the home directory as outputdir and ~/Downloads as workdir which can be
 changed if necessary.
-* if you clone into the home directory no changes are needed.
 ```
-autosave="$HOME/readcomic_dl/autosave"
 workdir="$HOME/Downloads/"
 outputdir="$HOME/"
 ```
