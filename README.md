@@ -14,14 +14,11 @@ arch: pacman -S wget xdotool img2pdf bc dialog firefox-esr
 
 * clone this repo:
 ```
-cd $HOME
 git clone https://github.com/tabletseeker/readcomic_dl -b main
 ```
-* enter dir & execute:
+* execute:
 ```
-cd readcomic_dl
-chmod +x *
-./readcomic_dl
+bash readcomic_dl/readcomic_dl
 ```
 * make sure to adjust load_time and save_time to your liking as explained below, but also keep in mind that captchas are triggered if pages are loaded too quickly in series. The sweet spot is around 3-4 seconds for each.
 * dialog already contains instructions for each window but you may also press the "Help" button, which can be toggled via TAB, for further information.
