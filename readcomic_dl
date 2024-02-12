@@ -201,7 +201,8 @@
 
 								sleep 1
 
-								img2pdf "$workdir""$name""${input[1]}"_files/*.j*g --output "$outputdir""$name""${input[1]}".pdf && \
+								img2pdf "$workdir""$name""${input[1]}"_files/*.j*g --output "$outputdir""$name""${input[1]}".pdf || \
+								{ echo -e "Error! \nCaptchas may have been triggered"; exit; }
 
 								rm -rf "$workdir""$name""${input[1]}"_files "$workdir""$name""${input[1]}"
 								
