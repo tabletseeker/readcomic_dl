@@ -6,9 +6,9 @@ working solution in 2024.
 * required: `wget` `xdotool` `img2pdf` `bc` `dialog` `firefox-esr`
 * optional: `gnome-terminal` `google-chrome`
 ```
-debian: sudo apt-get install -y wget xdotool img2pdf bc dialog firefox-esr
-fedora: sudo dnf install wget xdotool img2pdf bc dialog firefox-esr
-arch: pacman -S wget xdotool img2pdf bc dialog firefox-esr
+debian: sudo apt-get install -y git wget xdotool img2pdf bc dialog firefox-esr
+fedora: sudo dnf install git wget xdotool img2pdf bc dialog firefox-esr
+arch: pacman -S git wget xdotool img2pdf bc dialog firefox-esr
 ```
 # Usage
 
