@@ -5,60 +5,12 @@
 	dialogrc="$PWD/readcomic_dl/.dialogrc"
 	outputdir="$HOME/"
 	url_regex='https://readcomiconline.li/Comic/(.*?)'
-	load_time=4
-	save_time=4
+	load_time=8
+	save_time=6
 	browser="firefox"
+
+	function user_custom_issue {
 	
-	[ -f ~/.dialogrc ] || cp "$dialogrc" ~/.dialogrc
-
-	while true; do
-	
-		url=$(dialog  --title "Comic URL" \
-				--inputbox "Enter the URL of your comic's main page:" 8 50 \
-				3>&1 1>&2 2>&3 3>&- | tr -d ' ' \
-		)
-		
-		[[ $url =~ $url_regex && $url != *"?id"* ]] && break || dialog --title "Error Input" \
-		--msgbox "This script exclusively supports main page links from readcomiconline.li \nPlease try again!" 8 28
-	done
-	
-	read -ra array <<< $(wget "$url" -q -O - | grep -Eo '"(.*?)\?id=[0-9]*"' | sed '1!G;h;$!d' | tr -d '"'| tr '\n' ' ')
-
-	for x in "${!array[@]}"; do 
-
-		clean_title[x]=$(echo "${array[x]}" | sed -e "s/\?id=[0-9]*//g" -e 's@.*/@@')
-		item_help=$(echo "${array[x]}" | cut -d "/" -f3- | sed -e "s/\?id=[0-9]*//g")
-
-		[ "$x" -eq "0" ] && { darray[0]="$x"; \
-		darray[1]=" ${clean_title[x]} ";darray[2]="OFF";darray[3]="$item_help"; } || \
-		{ darray[x*4]="$x"; \
-		darray[x*4+1]=" ${clean_title[x]} "; darray[x*4+2]="OFF";darray[x*4+3]="$item_help"; }
-
-	done
-	
-	full_comic="$(echo "${array[0]}" | cut -d "/" -f3)-"
-	duplicates=($(echo "${clean_title[@]}" | fmt -1 | sort | uniq -Du))	
-	
-	[ -n "$duplicates" ] && { for x in "${!clean_title[@]}"; do
-		echo "${duplicates[twin]}" | \
-		grep -Ewqo "${clean_title[x]}" && \
-		clean_title[x]="${clean_title[x]}#duplicate-$((twin+1))" && \
-		((twin++)) && [ -z "${duplicates[twin]}" ] && break; \
-		done; }
-
-	[ "${#array[@]}" -gt "1" ] && dialog --colors \
-		--backtitle "\Zbreadcomic_dl\Zn \Z1by tablet_seeker\Zn" \
-		--title "\ZbMode Selection\Zn" "$@" \
-		--yesno "Would you like to download a range of comics?" 6 30 \
-		3>&1 1>&2 2>&3 3>&- || false
-		
-	[ "$?" -eq "1" ] && mode="multi" || mode="range"
-
-
-	case "$mode" in
-
-	  range)
-	    
 		while true; do
 		
 			issue=$(dialog  --clear \
@@ -90,34 +42,129 @@
 	      				a custom title instead of the default which would most likely be \"Issue-XX\"." 15 45
 					;;
 				1)
-					input[0]="default" && break
+					issue="default" && break
 					;;
 				
 				0)
-					[[ $issue =~ ^(.*?)-[0-9]{,4}$ ]] && \
-					{ read -ra input <<< $(echo "$issue" | tr -d ' ' | sed 's/\(.*\)-/\1 /'); } \
-					&& break || dialog --colors \
+					[[ $issue =~ ^(.*?)-[0-9]{,4}$ ]] && break || dialog --colors \
 					--title "\ZbError Input\Zn" \
 					--msgbox "Your naming scheme does not match the prescribed method. Try again!" 7 28
 					;;				
 				esac
 			
 		done
+	
+	}
+
+	function user_comic_selection {
+	
+		while true; do
+
+				index=($(dialog --clear \
+					--help-button \
+					--item-help \
+					--colors \
+					--separate-output \
+					--no-tags \
+					--separator " " \
+					--backtitle "\Zbreadcomic_dl\Zn \Z1by tablet_seeker\Zn" \
+					--title "\Zb$(echo "${array[0]}" | cut -d "/" -f3)\Zn" "$@" \
+					--output-fd 1 \
+					--checklist "$(echo -e "$checklist_string" | sed -e "s/\\t//g")" 30 66 5 "${darray[@]}" 3>&1 2>&3 3>&-))
+
+				case "$?" in
+				
+					2)
+						dialog --title "\ZbDetails\Zn" --colors \
+						--clear \
+						--backtitle "\Zbreadcomic_dl\Zn \Z1by tablet_seeker\Zn" \
+		      				--msgbox "Depending on the mode, this option either allows for the selection \
+		      				of a range by setting two check marks, a random assortment or a single comic.\
+		      				The list is always sorted in descending order, meaning it starts with the first \
+		      				issue. Special issues like TPB or Full are always displayed at the very top, above \
+		      				regular issues." 13 45
+						;;
+					1)
+						exit
+						;;
+					
+					0)
+						[[ $(echo "${index[@]}" | wc -w) =~ $error_check ]] && \
+						break || dialog --colors \
+						--title "\ZbError Input\Zn" \
+						--msgbox "$error_string" 7 29
+						;;				
+					esac
+
+
+
+		done
+	
+	}
+	
+	[ -f ~/.dialogrc ] || cp "$dialogrc" ~/.dialogrc
+
+	while true; do
+	
+		url=$(dialog  --title "Comic URL" \
+				--inputbox "Enter the URL of your comic's main page:" 8 50 \
+				3>&1 1>&2 2>&3 3>&- | tr -d ' ' \
+		)
+		
+		[[ $url =~ $url_regex && $url != *"?id"* ]] && break || dialog --title "Error Input" \
+		--msgbox "This script exclusively supports main page links from readcomiconline.li \nPlease try again!" 8 28
+	done
+	
+	read -ra array <<< $(wget "$url" -q -O - | grep -Eo '"(.*?)\?id=[0-9]*"' | sed '1!G;h;$!d' | tr -d '"'| tr '\n' ' ')
+
+	for x in "${!array[@]}"; do 
+
+		clean_title[x]=$(echo "${array[x]}" | sed -e "s/\?id=[0-9]*//g" -e 's@.*/@@')
+		item_help=$(echo "${array[x]}" | cut -d "/" -f3- | sed -e "s/\?id=[0-9]*//g")
+		darray+=($(echo "$x ${clean_title[x]} OFF $item_help"))
+
+	done
+	
+	full_comic="${item_help%/*}-"
+	duplicates=($(echo "${clean_title[@]}" | fmt -1 | sort | uniq -Du))	
+	
+	[ -n "$duplicates" ] && { for x in "${!clean_title[@]}"; do
+		echo "${duplicates[twin]}" | \
+		grep -Ewqo "${clean_title[x]}" && \
+		clean_title[x]="${clean_title[x]}#duplicate-$((twin+1))" && \
+		((twin++)) && [ -z "${duplicates[twin]}" ] && break; \
+		done; }
+
+	[ "${#array[@]}" -gt "1" ] && dialog --colors \
+		--backtitle "\Zbreadcomic_dl\Zn \Z1by tablet_seeker\Zn" \
+		--title "\ZbMode Selection\Zn" "$@" \
+		--yesno "Would you like to download a range of comics?" 6 30 \
+		3>&1 1>&2 2>&3 3>&- || false
+		
+	[ "$?" -eq "1" ] && mode="multi" || mode="range"
+
+
+	case "$mode" in
+
+	  range)
+	    
+		user_custom_issue
 		
 		checklist_string="Please set a checkmark at the beginning and end of your\n\
 		desired range by toggling the boxes next to the comic handle denoting each.\n
-		Naming Scheme: \Zb\Z1${input[0]}\Zn \Zb\Z1${input[1]}\Zn \n  
+		Naming Scheme: \Zb\Z1$issue\Zn \n  
 		Press \Zb\Zr SPACE \Zn to toggle an option on/off.\n\n\
 		Press \Zb\Zr Page UP \Zn or \Zb\Zr Page DOWN \Zn for rapid scrolling.\n\n\
 		Press \Zb\Zr Arrow UP ↑ \Zn or \Zb\Zr Arrow DOWN ↓ \Zn for slow scrolling.\n\n"
 
-		error_string="You must select exactly two options to complete a valid range!"
 		error_check='2'
-		num='echo y'
-		start='echo ${index[0]}'
-		limit='echo ${index[1]}'
-		[ "${#input[@]}" -gt "1" ] && { scheme='echo ${input[0]}-';full_comic=""; } || \
-		scheme='echo ${clean_title[y]}'
+		error_string="You must select exactly two options to complete a valid range!"
+		
+		user_comic_selection
+		
+		start="${index[0]}"
+		limit=$(echo $((index[1]+1)))
+		issue_nr=$(echo "$issue" | sed "s|.*-||")
 	    ;;
 
 	  multi)
@@ -128,96 +175,49 @@
 		Press \Zb\Zr Page UP \Zn or \Zb\Zr Page DOWN \Zn for rapid scrolling.\n\n\
 		Press \Zb\Zr Arrow UP ↑ \Zn or \Zb\Zr Arrow DOWN ↓ \Zn for slow scrolling.\n\n"
 
-		error_string="You have not selected any valid option. Please try again!"
 		error_check='^[1-9]+$'
-		start='echo 0'
-		limit='echo 0'
-		num='echo ${index[check-1]}'
-		scheme='echo "${choice[check-1]}"'
+		error_string="You have not selected any valid option. Please try again!"
+		
+		user_comic_selection
+		
+		start=0
+		limit=${#index[@]}
+		
+		for x in "${!index[@]}"; do
+
+			choice[x]="${clean_title[${index[x]}]}"
+		done
 	    ;;
 	esac
 
 
-	while true; do
+	for ((x=$start;x<$limit;x++)); do
+		
+		case "$mode" in
 
-			index=($(dialog --clear \
-				--help-button \
-				--item-help \
-				--colors \
-				--separate-output \
-				--no-tags \
-				--separator " " \
-				--backtitle "\Zbreadcomic_dl\Zn \Z1by tablet_seeker\Zn" \
-				--title "\Zb$(echo "${array[0]}" | cut -d "/" -f3)\Zn" "$@" \
-				--output-fd 1 \
-				--checklist "$(echo -e "$checklist_string" | sed -e "s/\\t//g")" 30 66 5 "${darray[@]}" 3>&1 2>&3 3>&-))
+		range)
+			[[ $issue =~ default ]] && scheme="${clean_title[x]}" || \
+			{ scheme="${issue%-*}-$issue_nr"; full_comic=""; }
+			num=$x
+		    ;;
 
-			case "$?" in
-			
-				2)
-					dialog --title "\ZbDetails\Zn" --colors \
-					--clear \
-					--backtitle "\Zbreadcomic_dl\Zn \Z1by tablet_seeker\Zn" \
-	      				--msgbox "Depending on the mode, this option either allows for the selection \
-	      				of a range by setting two check marks, a random assortment or a single comic.\
-	      				The list is always sorted in descending order, meaning it starts with the first \
-	      				issue. Special issues like TPB or Full are always displayed at the very top, above \
-	      				regular issues." 13 45
-					;;
-				1)
-					exit
-					;;
-				
-				0)
-					[[ $(echo "${index[@]}" | wc -w) =~ $error_check ]] && \
-					break || dialog --colors \
-					--title "\ZbError Input\Zn" \
-					--msgbox "$error_string" 7 29
-					;;				
-				esac
+		multi)
+			scheme="${choice[x]}"
+			num="${index[x]}"
+		    ;;
+		
+		esac
 
+		bash "$autosave" -b "$browser" -d "$workdir""$scheme" -c "$full_comic$scheme" \
+		--load-wait-time "$load_time" --save-wait-time "$save_time" "https://readcomiconline.li${array[num]}&s=&quality=hq&s=&readType=1"
 
+		sleep 1
+
+		img2pdf "$workdir""$scheme"_files/*.j*g --output "$outputdir""$scheme".pdf || \
+		{ echo -e "\nInput Error! \nCaptchas may have been triggered or load/save time too short"; exit; }
+
+		rm -rf "$workdir""$scheme"_files "$workdir""$scheme"
+		
+		((issue_nr++))
 
 	done
-			
-			for x in "${!index[@]}"; do
-
-				choice[x]="${clean_title[${index[x]}]}"
-			done
-				
-				for x in "${!array[@]}"; do
-
-					
-					if [[ "$mode" == "multi" ]] && [ "$x" -eq "${index[check]}" ] || [[ "$mode" == "range" ]]; then
-
-							for ((y=$(eval $start);y<=$(eval $limit);y++)); do
-								
-								((check++))
-								
-								name=$(eval $scheme)
-								
-								bash "$autosave" -b "$browser" -d "$workdir""$name""${input[1]}" -c "$full_comic$name${input[1]}" \
-								--load-wait-time "$load_time" --save-wait-time "$save_time" "https://readcomiconline.li${array[$(eval $num)]}&s=&quality=hq&s=&readType=1"
-
-								sleep 1
-
-								img2pdf "$workdir""$name""${input[1]}"_files/*.j*g --output "$outputdir""$name""${input[1]}".pdf || \
-								{ echo -e "\nInput Error! \nCaptchas may have been triggered or load/save time too short"; exit; }
-
-								rm -rf "$workdir""$name""${input[1]}"_files "$workdir""$name""${input[1]}"
-								
-								[[ -n ${input[1]} ]] && ((input[1]++))
-
-					
-							done
-							
-							[[ "$mode" == "range" ]] && exit
-							[[ "$mode" == "multi" ]] && [ "$check" -eq "${#index[@]}" ] && exit
-							
-					
-					fi		
-
-				
-				done
-
-		
