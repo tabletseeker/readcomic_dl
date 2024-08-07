@@ -1,11 +1,11 @@
 #!/bin/bash
 	
-	autosave="$PWD/readcomic_dl/autosave"
-	workdir="$HOME/Downloads/"
-	dialogrc="$PWD/readcomic_dl/.dialogrc"
-	outputdir="$HOME/"
+	autosave="$PWD/autosave"
+	workdir="$HOME/Downloads"
+	dialogrc="$PWD/.dialogrc"
+	outputdir="$HOME"
 	url_regex='https://readcomiconline.li/Comic/(.*?)'
-	load_time=8
+	load_time=6
 	save_time=6
 	browser="firefox"
 
@@ -208,15 +208,15 @@
 		
 		esac
 
-		bash "$autosave" -b "$browser" -d "$workdir""$scheme" -c "$full_comic$scheme" \
+		bash "$autosave" -b "$browser" -d "$workdir/$scheme" -c "$full_comic$scheme" \
 		--load-wait-time "$load_time" --save-wait-time "$save_time" "https://readcomiconline.li${array[num]}&s=&quality=hq&s=&readType=1"
 
 		sleep 1
 
-		img2pdf "$workdir""$scheme"_files/*.j*g --output "$outputdir""$scheme".pdf || \
+		img2pdf "$workdir/$scheme"_files/*.j*g --output "$outputdir/$scheme".pdf || \
 		{ echo -e "\nInput Error! \nCaptchas may have been triggered or load/save time too short"; exit; }
 
-		rm -rf "$workdir""$scheme"_files "$workdir""$scheme"
+		rm -rf "$workdir/$scheme"_files "$workdir/$scheme"
 		
 		((issue_nr++))
 
