@@ -12,6 +12,8 @@ fi
 
 load_wait_time=6
 save_wait_time=4
+scroll_num=3
+scroll_delay=4000
 scriptname="$(basename "$0")"
 destination="."
 browser="google-chrome"
@@ -28,6 +30,8 @@ function print_usage() {
     printf "  -b, --browser          Browser executable to be used (must be one of 'google-chrome', 'chromium-browser' or 'firefox'). Default = '%s'.\n" "${browser}" >&2
     printf "  --load-wait-time       Number of seconds to wait for the page to be loaded (i.e., seconds to sleep before Ctrl+S is 'pressed'). Default = %s\n" "${load_wait_time}" >&2
     printf "  --save-wait-time       Number of seconds to wait for the page to be saved (i.e., seconds to sleep before Ctrl+F4 is 'pressed'). Default = %s\n" "${save_wait_time}" >&2
+    printf "  --scroll-num           Number of scrolling events to ensure the page has loaded all available images. Default = %s\n" "${scroll_num}" >&2
+    printf "  --scroll-delay         Number of milliseconds to wait between each scrolling event. Default = %s\n" "${scroll_delay}" >&2
     printf "  -h, --help             Display this help message and exit.\n" >&2
 }
 
@@ -62,6 +66,16 @@ do
         --save-wait-time)
             shift;
             save_wait_time="$1"
+            shift
+            ;;
+         --scroll-num)
+            shift;
+            scroll_num="$1"
+            shift
+            ;;
+        --scroll-delay)
+            shift;
+            scroll_delay="$1"
             shift
             ;;
         -h | --help)
@@ -142,7 +156,6 @@ validate_input
 # Launch ${browser}, and wait for the page to load
 "${browser}" "${url}" &>/dev/null &
 sleep ${load_wait_time}
-
 # Find the id for the ${browser} window
 browser_wid="$(xdotool search --sync --onlyvisible --class "${browser}" | head -n 1)"
 wid_re='^[0-9]+$'  # window-id must be a valid integer
@@ -150,6 +163,7 @@ if [[ ! "${browser_wid}" =~ ${wid_re} ]]; then
     printf "ERROR: Unable to find X-server window id for browser.\n" >&2
     exit 1
 fi
+for x in $(seq ${scroll_num}); do xdotool windowactivate "${browser_wid}" key --delay ${scroll_delay} End; sleep 1; done
 
 # Activate the ${browser} window, and "press" ctrl+s
 xdotool windowactivate "${browser_wid}" key --clearmodifiers "ctrl+s"
