@@ -46,6 +46,13 @@ like the script to wait for a page to load (load_time) and be downloaded (save_t
 load_time=4
 save_time=4
 ```
+* readcomiconline has recently changed the way images load on the page, thus additional steps
+  are necessary to ensure they are all captured. `scroll_num` determines the amount of bottom scroll events
+  triggered by xdotool to ensure all images have loaded. `scroll_delay` marks the delay between each scrolling event.
+```
+scroll_num=3
+scroll_delay=4000
+```
 
 ## Terminal Requirements
  * dialog needs a minimum terminal geometry of 75x36 (RowsxColumns)
