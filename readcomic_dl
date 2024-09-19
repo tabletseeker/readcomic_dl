@@ -5,8 +5,10 @@
 	dialogrc="$PWD/.dialogrc"
 	outputdir="$HOME"
 	url_regex='https://readcomiconline.li/Comic/(.*?)'
-	load_time=6
+	load_time=3
 	save_time=6
+	scroll_num=4
+	scroll_delay=4000
 	browser="firefox"
 
 	function user_custom_issue {
@@ -209,7 +211,8 @@
 		esac
 
 		bash "$autosave" -b "$browser" -d "$workdir/$scheme" -c "$full_comic$scheme" \
-		--load-wait-time "$load_time" --save-wait-time "$save_time" "https://readcomiconline.li${array[num]}&s=&quality=hq&s=&readType=1"
+		--load-wait-time "$load_time" --save-wait-time "$save_time" --scroll-num "$scroll_num" --scroll-delay "$scroll_delay" \
+		"https://readcomiconline.li${array[num]}&s=&quality=hq&s=&readType=1"
 
 		sleep 1
 
