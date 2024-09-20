@@ -13,7 +13,7 @@ fi
 load_wait_time=6
 save_wait_time=4
 scroll_num=3
-scroll_delay=4000
+scroll_delay=10000
 scriptname="$(basename "$0")"
 destination="."
 browser="google-chrome"
@@ -163,7 +163,8 @@ if [[ ! "${browser_wid}" =~ ${wid_re} ]]; then
     printf "ERROR: Unable to find X-server window id for browser.\n" >&2
     exit 1
 fi
-for x in $(seq ${scroll_num}); do xdotool windowactivate "${browser_wid}" key --delay ${scroll_delay} End; sleep 1; done
+for x in $(seq ${scroll_num}); do [ $x -lt $scroll_num ] && printf "\nINFO: $((scroll_num-x)) Scroll $([ $x -lt 2 ] && echo Events || echo Event) Remaining\n">&2; \
+xdotool windowactivate "${browser_wid}" key --delay ${scroll_delay} End; done
 
 # Activate the ${browser} window, and "press" ctrl+s
 xdotool windowactivate "${browser_wid}" key --clearmodifiers "ctrl+s"
