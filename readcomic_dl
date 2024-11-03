@@ -8,7 +8,7 @@
 	load_time=3
 	save_time=6
 	scroll_num=3
-	scroll_delay=10000
+	scroll_delay=15000
 	browser="firefox"
 
 	function user_custom_issue {
