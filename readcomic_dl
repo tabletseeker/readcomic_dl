@@ -216,7 +216,7 @@
 
 		sleep 1
 
-		img2pdf "$workdir/$scheme"_files/*.j*g --output "$outputdir/$scheme".pdf || \
+		img2pdf $(find "$workdir/$scheme"_files -type f -regextype posix-extended -regex '.*(JPG|jpg|jpeg)' | sort) --output "$outputdir/$scheme".pdf || \
 		{ echo -e "\nInput Error! \nCaptchas may have been triggered or load/save time too short"; exit; }
 
 		rm -rf "$workdir/$scheme"_files "$workdir/$scheme"
